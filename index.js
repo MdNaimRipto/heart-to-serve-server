@@ -32,8 +32,14 @@ async function run() {
     const eventsCollection = client.db("HeartToServe").collection("events");
     const donorsCollection = client.db("HeartToServe").collection("donors");
 
+    app.get("/programs", async (req, res) => {
+      const query = {};
+      const programs = await programsCollection.find(query).toArray();
+      res.send(programs);
+    });
   } finally {
-  }
+    
+}
 }
 
 run().catch((err) => console.error(err));
