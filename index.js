@@ -41,7 +41,9 @@ async function run() {
 
     // all donors
     app.get("/donors", async (req, res) => {
-      const query = {};
+      const group = req.query.group;
+      console.log(group)
+      const query = {group:group};
       const donors = await donorsCollection.find(query).toArray();
       res.send(donors);
     });
@@ -52,10 +54,18 @@ async function run() {
       res.send(counseling);
     });
 
+    // events
     app.get("/events", async (req, res) => {
       const query = {};
       const events = await eventsCollection.find(query).toArray();
       res.send(events);
+    });
+
+    // form post
+    app.post("/donors", async (req, res) => {
+      const user  = req.body;
+      const donors = await donorsCollection.insertOne(user);
+      res.send(donors);
     });
   } finally {
   }
