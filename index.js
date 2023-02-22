@@ -7,30 +7,30 @@ require("dotenv").config();
 
 // middle wares
 const corsOptions = {
-    origin: "*",
-    credentials: true,
-    optionSuccessStatus: 200,
+  origin: "*",
+  credentials: true,
+  optionSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("Server Running Successfully");
+  res.send("Server Running Successfully");
 });
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.1rqmivg.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverApi: ServerApiVersion.v1,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
 });
 
 async function run() {
-    try {
-        const programsCollection = client.db("HeartToServe").collection("programs");
-        const eventsCollection = client.db("HeartToServe").collection("events");
-        const donorsCollection = client.db("HeartToServe").collection("donors");
-        const counselingCollection = client.db("HeartToServe").collection("counseling");
+  try {
+    const programsCollection = client.db("HeartToServe").collection("programs");
+    const eventsCollection = client.db("HeartToServe").collection("events");
+    const donorsCollection = client.db("HeartToServe").collection("donors");
+    const counselingCollection = client.db("HeartToServe").collection("counseling");
 
     // all programs
     app.get("/programs", async (req, res) => {
@@ -42,8 +42,7 @@ async function run() {
     // all donors
     app.get("/donors", async (req, res) => {
       const group = req.query.group;
-      console.log(group)
-      const query = {group:group};
+      const query = { group: group };
       const donors = await donorsCollection.find(query).toArray();
       res.send(donors);
     });
@@ -63,7 +62,7 @@ async function run() {
 
     // form post
     app.post("/donors", async (req, res) => {
-      const user  = req.body;
+      const user = req.body;
       const donors = await donorsCollection.insertOne(user);
       res.send(donors);
     });
@@ -74,5 +73,5 @@ async function run() {
 run().catch((err) => console.error(err));
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
